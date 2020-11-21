@@ -100,7 +100,7 @@ class Servicios_Ctrl
 
             $this->M_Servicio->save();
             $msg = "Servicio actuaizado";
-            $info ['id'] = $this->M_Servicio->get('id_bitacora');
+            $info ['id'] = $this->M_Servicio->get('id_servicio');
             
         } else {
             $msg = "El servicio no existe";
