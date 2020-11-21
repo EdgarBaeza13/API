@@ -16,7 +16,7 @@ class Clientes_Ctrl
         $this->M_Cliente->set('direccion', $f3->get('POST.direccion'));
         $this->M_Cliente->set('telefono', $f3->get('POST.telefono'));
         $this->M_Cliente->set('referencia', $f3->get('POST.referencia'));
-        $this->M_Cliente->set('fecha', $f3->get('POST.fecha'));
+        $this->M_Cliente->set('fecha', date("Y-m-d"));
         $this->M_Cliente->save();
         echo json_encode([
             'mensaje' => 'Cliente agregado',
