@@ -94,7 +94,7 @@ class Servicios_Ctrl
         $msg= "";
         $info = array();
 
-        if($this->M_Equipo->loaded() > 0){
+        if($this->M_Servicio->loaded() > 0){
             $this->M_Servicio->set('tipo', $f3->get('POST.tipo'));
             $this->M_Servicio->set('descripcion', $f3->get('POST.descripcion'));
 
