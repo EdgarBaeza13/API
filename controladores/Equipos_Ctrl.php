@@ -18,7 +18,7 @@ class Equipos_Ctrl
         $this->M_Equipo->set('tecnologia', $f3->get('POST.tecnologia'));
         $this->M_Equipo->set('marca', $f3->get('POST.marca'));
         $this->M_Equipo->set('ubicacion', $f3->get('POST.ubicacion'));
-        $this->M_Equipo->set('fecha', date("Y-d-m"));
+        $this->M_Equipo->set('fecha', date("Y-m-d"));
         $this->M_Equipo->set('cliente', $f3->get('POST.cliente'));
         $this->M_Equipo->save();
         $id= $this->M_Equipo->get('id_equipo');

@@ -21,7 +21,7 @@ class Bitacoras_Ctrl
         $this->M_Bitacora->set('id_equipo', $f3->get('POST.id_equipo'));
         $this->M_Bitacora->set('id_servicio', $f3->get('POST.id_servicio'));
         $this->M_Bitacora->set('fecha', date("Y-m-d"));
-        $this->M_Bitacora->set('fechaprox', $nuevafecha);
+        $this->M_Bitacora->set('fechaprox', date( 'Y-m-d' ,$nuevafecha));
         $this->M_Bitacora->set('diagnostico', $f3->get('POST.diagnostico'));
         $this->M_Bitacora->set('precio', $f3->get('POST.precio'));
         $this->M_Bitacora->save();
@@ -197,6 +197,23 @@ class Bitacoras_Ctrl
         $f2= $f3->get('POST.fechafin');
         $this->M_Bitacora->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= bitacora.id_cliente';
        $result= $this->M_Bitacora->find(['fecha BETWEEN ? AND ?', $f1, $f2]);
+       $items= array();
+       foreach($result as $bitacora){
+           $items[] = $bitacora->cast();
+       }
+       echo json_encode([
+        'mensaje' => count($items) > 0 ? '' : 'Aun no hay registros',
+        'info'=> [
+            'items' => $items,
+            'total' => count($items)
+        ]
+    ]);
+        
+    }
+    public function avisos($f3)
+    {
+        $this->M_Bitacora->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= bitacora.id_cliente';
+       $result= $this->M_Bitacora->find(['fechaprox >= NOW() - INTERVAL 2 DAY', $f3->get('POST.fechaprox') ]);
        $items= array();
        foreach($result as $bitacora){
            $items[] = $bitacora->cast();
