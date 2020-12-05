@@ -37,7 +37,8 @@ class Avisos_Ctrl
 
     public function listado($f3)
     {
-       $result= $this->M_Aviso->find(['tipo LIKE ?', '%' . $f3->get('POST.texto') . '%']);
+       $this->M_Aviso->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= aviso.id_cliente';
+       $result= $this->M_Aviso->find(['id_aviso LIKE ?', '%' . $f3->get('POST.texto') . '%']);
        $items= array();
        foreach($result as $aviso){
            $items[] = $aviso->cast();
@@ -79,7 +80,8 @@ class Avisos_Ctrl
         $info = array();
 
         if($this->M_Aviso->loaded() > 0){
-            $this->M_Aviso->set('id_cliente', $f3->get('POST.id_equipo'));
+            $this->M_Aviso->set('id_cliente', $f3->get('POST.id_cliente'));
+            $this->M_Aviso->set('id_equipo', $f3->get('POST.id_equipo'));
             $this->M_Aviso->set('fecha', $f3->get('POST.fecha'));
             $this->M_Aviso->set('precio', $f3->get('POST.precio'));
             $this->M_Aviso->set('estado', $f3->get('POST.estado'));
@@ -102,7 +104,7 @@ class Avisos_Ctrl
 
     public function avisos($f3)
     {
-        $this->M_Aviso->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= bitacora.id_cliente';
+        $this->M_Aviso->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= aviso.id_cliente';
        //$result= $this->M_Bitacora->find(['fechaprox >= NOW() - INTERVAL 2 DAY', $f3->get('POST.fechaprox') ]);
        $result= $this->M_Aviso->find(['fecha  <=  DATE_SUB(NOW(),INTERVAL 6 MONTH)', $f3->get('POST.fecha') ]);
        $items= array();
