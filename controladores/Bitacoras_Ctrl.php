@@ -11,7 +11,7 @@ class Bitacoras_Ctrl
     {
       $this->M_Bitacora = new M_Bitacoras();
       $this->M_Bitacora_Servicio = new M_Bitacora_Servicio();
-      $this->M_Aviso = new M_Avisos();
+     /* $this->M_Aviso = new M_Avisos();*/
     }
 
     public function crear($f3)
@@ -23,17 +23,19 @@ class Bitacoras_Ctrl
         $this->M_Bitacora->set('id_equipo', $f3->get('POST.id_equipo'));
         $this->M_Bitacora->set('id_servicio', $f3->get('POST.id_servicio'));
         $this->M_Bitacora->set('fecha', date("Y-m-d"));
-        $this->M_Bitacora->set('fechaprox', date( 'Y-m-d' ,$nuevafecha));
+        $this->M_Bitacora->set('fechaprox', $nuevafecha);
         $this->M_Bitacora->set('diagnostico', $f3->get('POST.diagnostico'));
         $this->M_Bitacora->set('precio', $f3->get('POST.precio'));
+        $this->M_Bitacora->set('estado', $f3->get('POST.estado'));
+        $this->M_Bitacora->set('codigo', $f3->get('POST.codigo'));
         $this->M_Bitacora->save();
         //Guardar en otra tabla 
-        $this->M_Aviso->set('id_equipo', $f3->get('POST.id_equipo'));
+       /* $this->M_Aviso->set('id_equipo', $f3->get('POST.id_equipo'));
         $this->M_Aviso->set('id_cliente', $f3->get('POST.id_equipo'));
         $this->M_Aviso->set('fecha', date("Y-m-d"));
         $this->M_Aviso->set('precio', $f3->get('POST.precio'));
         $this->M_Aviso->set('estado', $f3->get('POST.estado'));
-        $this->M_Aviso->save();
+        $this->M_Aviso->save(); */
         echo json_encode([
             'mensaje' => 'Bitacora creada',
             'info'=> [
@@ -182,11 +184,14 @@ class Bitacoras_Ctrl
             $this->M_Bitacora->set('id_equipo', $f3->get('POST.id_equipo'));
             $this->M_Bitacora->set('id_servicio', $f3->get('POST.id_servicio'));
             $this->M_Bitacora->set('fecha', $f3->get('POST.fecha'));
+            $this->M_Bitacora->set('fechaprox', $f3->get('POST.fechaprox'));
             $this->M_Bitacora->set('diagnostico', $f3->get('POST.diagnostico'));
+            $this->M_Bitacora->set('estado', $f3->get('POST.estado'));
             $this->M_Bitacora->set('precio', $f3->get('POST.precio'));
+            $this->M_Bitacora->set('codigo', $f3->get('POST.codigo'));
 
             $this->M_Bitacora->save();
-            $msg = "bitacora actualizada actuaizada";
+            $msg = "bitacora actualizada";
             $info ['id'] = $this->M_Bitacora->get('id_bitacora');
             
         } else {
@@ -222,8 +227,8 @@ class Bitacoras_Ctrl
     public function avisos($f3)
     {
         $this->M_Bitacora->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= bitacora.id_cliente';
-       //$result= $this->M_Bitacora->find(['fechaprox >= NOW() - INTERVAL 2 DAY', $f3->get('POST.fechaprox') ]);
-       $result= $this->M_Bitacora->find(['fecha  <=  DATE_SUB(NOW(),INTERVAL 6 MONTH)', $f3->get('POST.fechaprox') ]);
+       $result= $this->M_Bitacora->find(['fechaprox >= NOW() - INTERVAL 2 DAY', $f3->get('POST.fechaprox') ]);
+       //$result= $this->M_Bitacora->find(['fecha  <=  DATE_SUB(NOW(),INTERVAL 6 MONTH)', $f3->get('POST.fechaprox') ]);
        $items= array();
        foreach($result as $bitacora){
            $items[] = $bitacora->cast();
