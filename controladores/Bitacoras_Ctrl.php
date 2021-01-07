@@ -16,6 +16,8 @@ class Bitacoras_Ctrl
 
     public function crear($f3)
     {
+        $estado= 'Pendiente';
+
         $fecha = date('Y-m-d');
         $nuevafecha = strtotime ( '+6 month' , strtotime ( $fecha ) ) ;
         $nuevafecha = date ( 'Y-m-d' , $nuevafecha );
@@ -26,7 +28,7 @@ class Bitacoras_Ctrl
         $this->M_Bitacora->set('fechaprox', $nuevafecha);
         $this->M_Bitacora->set('diagnostico', $f3->get('POST.diagnostico'));
         $this->M_Bitacora->set('precio', $f3->get('POST.precio'));
-        $this->M_Bitacora->set('estado', $f3->get('POST.estado'));
+        $this->M_Bitacora->set('estado', $estado);
         $this->M_Bitacora->set('codigo', $f3->get('POST.codigo'));
         $this->M_Bitacora->save();
         //Guardar en otra tabla 
@@ -227,8 +229,26 @@ class Bitacoras_Ctrl
     public function avisos($f3)
     {
         $this->M_Bitacora->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= bitacora.id_cliente';
-       $result= $this->M_Bitacora->find(['fechaprox >= NOW() - INTERVAL 2 DAY', $f3->get('POST.fechaprox') ]);
-       //$result= $this->M_Bitacora->find(['fecha  <=  DATE_SUB(NOW(),INTERVAL 6 MONTH)', $f3->get('POST.fechaprox') ]);
+       //$result= $this->M_Bitacora->find(['fechaprox >= NOW() - INTERVAL 2 DAY', $f3->get('POST.fechaprox') ]);
+       $result= $this->M_Bitacora->find(['fecha  <=  DATE_SUB(NOW(),INTERVAL 6 MONTH)', $f3->get('POST.fecha') ]);
+       $items= array();
+       foreach($result as $bitacora){
+           $items[] = $bitacora->cast();
+       }
+       echo json_encode([
+        'mensaje' => count($items) > 0 ? '' : 'Aun no hay registros',
+        'info'=> [
+            'items' => $items,
+            'total' => count($items)
+        ]
+    ]);
+        
+    }
+
+    public function mes($f3)
+    {
+        $this->M_Bitacora->cliente = 'SELECT nombre FROM cliente WHERE id_cliente= bitacora.id_cliente';
+       $result= $this->M_Bitacora->find(['MONTH(fecha) = MONTH(CURRENT_DATE())', $f3->get('POST.fecha') ]);
        $items= array();
        foreach($result as $bitacora){
            $items[] = $bitacora->cast();
